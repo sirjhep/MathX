@@ -7,30 +7,20 @@
 tinymce.PluginManager.add('MathX', function (editor, url) {
 	// Add a button that opens a window
 	editor.addButton('MathX', {
-		text : 'Sample MathX button',
+		text : 'f(x)',
 		icon : false,
 		onclick : function () {
-			// Open a window
-			editor.windowManager.open({
-				title : "Example MathX window opened by a button",
-				body : [{
-						type : 'textbox',
-						name : 'testboxname',
-						label : 'testbox label'
-					}
-
-				],
-				onsubmit : function (e) {
-					// Insert content when the window form is submitted
-					editor.insertContent("input on testbox: " + e.data.testboxname)
-				}
-			});
+      // Insert a span and set caret inside it.
+			editor.insertContent('<span class="AMedit">`');
+      var bm = editor.selection.getBookmark();
+      editor.insertContent('`</span>');
+      editor.selection.moveToBookmark(bm);
 		}
 	});
 
 	// Adds a menu item to the tools menu
 	editor.addMenuItem('MathX', {
-		text : 'Example MathX plugin',
+		text : 'MathX',
 		context : 'tools', //which tab it will belong
 		onclick : function () {
 			// Open window with a specific url
