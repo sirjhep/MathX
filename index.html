@@ -8,8 +8,7 @@
 tinymce.init({
   selector:'textarea',
   plugins: 'MathX',
-  toolbar: 'MathX',
-  content_css: "MathX/MathX.css"
+  toolbar: 'MathX'
   });
 </script>
 
@@ -21,8 +20,13 @@ tinymce.init({
 <h1>MathX</h1>
 <p>A tinyMCE plugin</p>
 <div style="width: 700px; height: 400px;">
-<textarea></textarea>
+<textarea>
+<p>When `a != 0`, there are two solutions to `ax^2 + bx + c = 0` and
+they are</p>
+<p style="text-align:center">
+  `x = (-b +- sqrt(b^2-4ac))/(2a) .`
+</p>
+</textarea>
 </div>
-
 </body>
 </html>
