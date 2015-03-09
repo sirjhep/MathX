@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen">
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>MathX</title>
+  <meta name="description" content="An attempt to create a plugin for TinyMCE&#39;s latest version (v4.1) that will enable users to add equations and other mathematical expressions.">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">MathX</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">An attempt to create a plugin for TinyMCE&#39;s latest version (v4.1) that will enable users to add equations and other mathematical expressions.</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/sirjhep/MathX/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/sirjhep/MathX/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/sirjhep/MathX" class="code">View MathX on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h1>
+<a id="mathx" class="anchor" href="#mathx" aria-hidden="true"><span class="octicon octicon-link"></span></a>MathX</h1>
+
+<p>An attempt to create a plugin for TinyMCE's latest version (v4.1) that will enable users to add equations and other mathematical expressions.
+This plugin will make use of MathJax.</p>
+
+<h2>
+<a id="how-to-install" class="anchor" href="#how-to-install" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to install</h2>
+
+<ol>
+<li>load MathX.js after tinyMCE is loaded.</li>
+</ol>
+
+<pre><code>&lt;script src="http://tinymce.cachefly.net/4.1/tinymce.min.js"&gt;&lt;/script&gt;
+&lt;script src="MathX/MathX.js"&gt;&lt;/script&gt;
+</code></pre>
+
+<ol>
+<li>add "MathX" to 'plugins' configuration in tinymce.init({}).</li>
+<li>add "MathX" to buttons.</li>
+</ol>
+
+<pre><code>&lt;script&gt;
+tinymce.init({
+  selector:'textarea',
+  plugins: 'MathX',
+  toolbar: 'MathX'
+  });
+&lt;/script&gt;
+</code></pre>
+
+<h4>
+<a id="been-developed" class="anchor" href="#been-developed" aria-hidden="true"><span class="octicon octicon-link"></span></a>Been Developed</h4>
+
+<ol>
+<li>initialize plugin</li>
+<li>add button and menu item</li>
+<li>dynamically load MathJax script.</li>
+<li>TypeSet ascii equations inside editor onload.</li>
+<li>Make all Jax Editable,</li>
+<li>Added a keyboard shortcut for inserting an equation. (alt + =).</li>
+<li>A help window.</li>
+</ol>
+
+<h4>
+<a id="to-be-develop" class="anchor" href="#to-be-develop" aria-hidden="true"><span class="octicon octicon-link"></span></a>To be develop</h4>
+
+<ol>
+<li>A button that will add a graph.</li>
+</ol>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/sirjhep" class="avatar"><img src="https://avatars0.githubusercontent.com/u/2695200?v=3&amp;s=60" width="48" height="48"></a> <a href="https://github.com/sirjhep">sirjhep</a> maintains <a href="https://github.com/sirjhep/MathX">MathX</a></p>
+
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="http://pages.github.com/">GitHub Pages</a><br>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/sirjhep/MathX/tarball/master" class="tar">tar</a><a href="https://github.com/sirjhep/MathX/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+  
+</body>
+</html>
