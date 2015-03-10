@@ -15,7 +15,15 @@
   <meta name="description" content="An attempt to create a plugin for TinyMCE&#39;s latest version (v4.1) that will enable users to add equations and other mathematical expressions.">
 
   <meta name="viewport" content="width=device-width,initial-scale=1">
-
+  <script src="http://tinymce.cachefly.net/4.1/tinymce.min.js"></script>
+  <script src="MathX/MathXplugin.js"></script>
+  <script>
+  tinymce.init({
+    selector:'textarea',
+    plugins: 'MathX',
+    toolbar: 'MathX'
+  });
+  </script>
 </head>
 
 <body>
@@ -25,7 +33,7 @@
       <h1 class="title">MathX</h1>
     </header>
     <div id="container">
-      <p class="tagline">An attempt to create a plugin for TinyMCE&#39;s latest version (v4.1) that will enable users to add equations and other mathematical expressions.</p>
+      <p class="tagline">A plugin for TinyMCE&#39;s latest version (v4.1.X) that will enable users to add equations and other mathematical expressions into the tinyMCE editor.</p>
       <div id="main" role="main">
         <div class="download-bar">
         <div class="inner">
@@ -38,13 +46,16 @@
         <article class="markdown-body">
           <h1>
 <a id="mathx" class="anchor" href="#mathx" aria-hidden="true"><span class="octicon octicon-link"></span></a>MathX</h1>
-
-<p>An attempt to create a plugin for TinyMCE's latest version (v4.1) that will enable users to add equations and other mathematical expressions.
-This plugin will make use of MathJax.</p>
-
+<h2>Demo:</h2>
+<textarea rows=5 cols=100>
+<p>When `a != 0`, there are two solutions to `ax^2 + bx + c = 0` and
+they are</p>
+<p style="text-align:center">
+  `x = (-b +- sqrt(b^2-4ac))/(2a) .`
+</p>
+</textarea>
 <h2>
 <a id="how-to-install" class="anchor" href="#how-to-install" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to install</h2>
-
 <ol>
 <li>load MathX.js after tinyMCE is loaded.</li>
 </ol>
