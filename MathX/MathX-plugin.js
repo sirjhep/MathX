@@ -11,13 +11,13 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 	editor.on('init', function (ed) {
 		var script = document.createElement("script");
 		script.type = "text/javascript";
-		script.src = "MathX/MathJaxEditor.js";
+		script.src = "MathX/MathX-editor.js";
 		this.getDoc().getElementsByTagName("head")[0].appendChild(script);
 	});
 
 	editor.on('keydown', function (e) {
 		//prevent rendered jax from going to next line.
-		if (e.originalTarget.id == 'MathJaxEditor-Input' && (e.keyCode == 13 || e.which == 13))
+		if (e.target.id == 'MathXEditor-Input' && (e.keyCode == 13 || e.which == 13))
 			e.preventDefault();
 	});
 

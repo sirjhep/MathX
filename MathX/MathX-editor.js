@@ -47,30 +47,32 @@
 		tr2.appendChild(td2);
 		td1.appendChild(input);
 		frame.parentNode.insertBefore(table, frame);
-		frame.style = "display: none;";
+		frame.style.display =  "None";
 
-		table.style = "display: inline;";
-		td2.style = "border: 1px solid black; padding: 5px 5px;";
+		table.style.display = 'inline-table';
+		td2.style.border = "1px solid black";
+    td2.style.padding = "5px 5px";
     if(newjax){
       input.placeholder = "Insert expression here...";
-      input.value = ""
+      input.value = "";
     }
     else
       input.value = jax.originalText;
-		input.id = "MathJaxEditor-Input";
-		input.style = "width: 100%;";
+		input.id = "MathXEditor-Input";
+		input.style.width = "100%";
 		input.type = 'text';
-		td2.id = 'MathJaxEditor-Preview';
+    input.readOnly = false;
+		td2.id = 'MathXEditor-Preview';
 		td2.innerHTML = '`' + input.value + '`';
-		MathJax.Hub.Typeset('MathJaxEditor-Preview');
+		MathJax.Hub.Typeset('MathXEditor-Preview');
     input.focus();
 
 		// event listener as when it is being edited showing a preview
-		input.onkeyup = function (e) {
-			if ((e.keyCode < 38 || e.keyCode > 40) && e.keyCode != 13) {
+		input.oninput = function (e) {
+			//if ((e.keyCode < 38 || e.keyCode > 40) && e.keyCode != 13) {
 				td2.innerHTML = '`' + this.value + '`';
-				MathJax.Hub.Typeset('MathJaxEditor-Preview');
-			}
+				MathJax.Hub.Typeset('MathXEditor-Preview');
+			//}
 		}
 
 		// evet listener when user is done editing by pressing "Enter"
@@ -85,19 +87,18 @@
 			if (newjax) {
 				var txtnode = document.createTextNode('`' + this.value + '`');
 				frame.parentNode.replaceChild(txtnode, table);
-				MathJax.Hub.Queue(["Typeset", MathJax.Hub, frame.id])
+				MathJax.Hub.Queue(["Typeset", MathJax.Hub, txtnode.parentNode])
 				MathJax.Hub.Queue(function () {
 					AttachClickEventToJax();
 				});
 			} else {
 				MathJax.Hub.Queue(["Text", jax, this.value]);
-				frame.style = "display: inline;";
+				frame.style.display = "inline";
 				MathJax.Hub.Queue(function () {
 					AttachClickEventToJax(jax.inputID + '-Frame');
 				});
 			}
 			table.remove();
-      frame.setAttribute("contenteditable", "false");
 		}
 	}
 
