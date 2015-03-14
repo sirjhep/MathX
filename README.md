@@ -18,4 +18,5 @@ This plugin will make use of MathJax.
 8. A help window.
 
 #### To be develop
-1. A button that will add a graph.
+1. To have only one js file. (Merge MathX-plugin.js and MathX-editor.)
+2. A button that will add a graph.
