@@ -3,20 +3,48 @@ An attempt to create a plugin for TinyMCE's latest version (v4.1) that will enab
 This plugin will make use of MathJax.
 
 ## How to install
-1. load MathX.js after tinyMCE is loaded.
-2. add "MathX" to 'plugins' configuration in tinymce.init({}).
-3. add "MathX" to buttons.
 
+### Method 1: If you are using TinyMCE's CDN version.
+1. load MathX.js after tinyMCE is loaded.
+```
+  <script src="http://tinymce.cachefly.net/4.1/tinymce.min.js"></script>
+  <script src="MathX/MathX-plugin.js"></script>
+```
+2. add "MathX" to 'plugins' configuration in tinymce.init({}).
+3. add "MathX" to toolbar.
+```
+  <script>
+  tinymce.init({
+    selector: 'textarea',
+    plugins: 'MathX',
+    toolbar: 'MathX'
+    });
+  </script>
+```
+
+### Method 2: If you are using your local copy of TinyMCE.
+
+1. Download MathX, and copy it (as a folder) to tinymce's plugin directory.
+2. simply add "MathX" to 'plugins' and 'toolbar' in your tinymce configuration on init.
+```
+  <script>
+  tinymce.init({
+    selector: 'textarea',
+    plugins: 'MathX',
+    toolbar: 'MathX'
+    });
+  </script>
+```
 
 #### Been Developed
-1. initialize plugin
-2. add button and menu item
-3. dynamically load MathJax script.
-5. TypeSet ascii equations inside editor onload.
-6. Make all Jax Editable,
-7. Added a keyboard shortcut for inserting an equation. (alt + =).
-8. A help window.
+- initialize plugin
+- add button and menu item
+- dynamically load MathJax script.
+- TypeSet ascii equations inside editor onload.
+- Make all Jax Editable,
+- Added a keyboard shortcut for inserting an equation. (alt + =).
+- A help window.
 
 #### To be develop
-1. To have only one js file. (Merge MathX-plugin.js and MathX-editor.)
-2. A button that will add a graph.
+- To have only one js file. (Merge MathX-plugin.js and MathX-editor.) (still in progress)
+- A button that will add a graph.

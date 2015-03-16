@@ -1,0 +1,13 @@
+#MXE{
+  display: inline-table;
+  border-collapse: collapse;
+}
+
+#MXE td{
+  border: 1px solid skyblue;
+}
+
+#MathXE-Input, #MathXE-Input:active, #MathXE-Input:hover{
+  border: 0px;
+  width: 97%;
+}
