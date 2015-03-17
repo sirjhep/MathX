@@ -8,9 +8,12 @@
 tinymce.PluginManager.add('MathX', function (editor, url) {
 
 	var $ = editor.$; // make a jQuery like namespace
+
+	//Create MathX object that is not visible in global.
 	var MathX = {
 		isActive : false,
-		jaxOn : false,
+		jaxSrc : 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=',
+		jaxConfig : 'AM_HTMLorMML-full',
 		init : function (jaxFrame) {
 			// initializes MathX and activate it.
 			this.isActive = true;
@@ -19,24 +22,22 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 			this.currentMXE = new this.editor(jaxFrame, jax); // creates a new object (Math X Editor object) and store it in currentMXE.
 		},
 
-    insert : function(){
-      editor.insertContent('<span class="MathJax"> ..<span>');
-      var bm = editor.selection.getBookmark();
-      editor.insertContent('.</span> </span> ');
-      editor.selection.moveToBookmark(bm);
-    },
-    
+		// insert a new equation
+		insert : function () {
+			var content = editor.selection.getContent();
+			editor.insertContent('<span class="MathJax">');
+			MathX.currentMXE.input.value = content;
+		},
 		// should be called as a new instance.
 		editor : function (jaxFrame, jax) {
 			this.isNew = (jax) ? false : true;
 			this.jax = (this.isNew) ? false : jax;
 			this.frame = jaxFrame;
-      var cMXE = this;
+			var cMXE = this;
 			var W = editor.getWin();
 			var doc = editor.getDoc();
 
 			this.init = function () { // initializes
-
 				// create needed nodes
 				this.table = doc.createElement('table');
 				this.row1 = this.table.insertRow(0);
@@ -56,18 +57,18 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 				this.input.id = "MathXE-Input";
 				this.input.type = 'text';
 				this.cell21.id = 'MathXE-Preview';
-        this.input.oninput = function(e){
-          cMXE.showPreview();
-        };
-        this.input.onblur = function(e){
-          cMXE.close();
-        }
+				this.input.oninput = function (e) {
+					cMXE.showPreview();
+				};
+				this.input.onblur = function (e) {
+					cMXE.close();
+				};
 
 				// add table#MXE before frame after hiding that frame.
 				this.cell11.appendChild(this.input);
 				$(this.frame).hide().before(this.table);
-				
-        this.showPreview();
+
+				this.showPreview();
 				this.input.focus();
 			};
 
@@ -78,37 +79,36 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 
 			this.close = function () {
 				if (this.isNew) {
-          if(this.input.value == ''){
-            this.frame.remove();
-            this.table.remove();
-          }else{
-            var txtnode = W.document.createTextNode('`' + this.input.value + '`');
-            this.frame.parentNode.replaceChild(txtnode, this.table);
-            this.frame.remove();
-            W.MathJax.Hub.Queue(function(){
-              W.MathJax.Hub.Typeset();
-            });
-          }
+					if (this.input.value === '') {
+						this.frame.remove();
+						this.table.remove();
+					} else {
+						var txtnode = W.document.createTextNode('`' + this.input.value + '`');
+						this.frame.parentNode.replaceChild(txtnode, this.table);
+						this.frame.remove();
+						W.MathJax.Hub.Queue(function () {
+							W.MathJax.Hub.Typeset();
+						});
+					}
 				} else {
-          console.log(this.input.value);
-					W.MathJax.Hub.Queue(function(){
-            cMXE.jax.Text(cMXE.input.value);
-          });
+					W.MathJax.Hub.Queue(function () {
+						cMXE.jax.Text(cMXE.input.value);
+					});
 					this.table.remove();
 					$(this.frame).show();
 				}
-        MathX.isActive = false;
-        MathX.currentMXE = false;
-        editor.selection.moveToBookmark(MathX.endBM);
+				MathX.isActive = false;
+				MathX.currentMXE = false;
+				editor.selection.moveToBookmark(MathX.endBM);
 			};
-      
-      this.esc = function(){
-        this.table.remove();
-        $(this.frame).show();
-        MathX.isActive = false;
-        MathX.currentMXE = false;
-        editor.selection.moveToBookmark(MathX.endBM);
-      }
+
+			this.esc = function () {
+				this.table.remove();
+				$(this.frame).show();
+				MathX.isActive = false;
+				MathX.currentMXE = false;
+				editor.selection.moveToBookmark(MathX.endBM);
+			};
 
 			this.init();
 		}
@@ -153,25 +153,27 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 		if (e.target.id == 'MathXE-Input' && (e.keyCode == 13 || e.which == 13) && MathX.isActive) {
 			e.preventDefault();
 			MathX.currentMXE.close();
-		}
-    if (e.target.id == 'MathXE-Input' && (e.keyCode == 27 || e.which == 27) && MathX.isActive){
-      MathX.currentMXE.esc();
-    }
+		} else if (e.target.id == 'MathXE-Input' && (e.keyCode == 27 || e.which == 27) && MathX.isActive)
+			MathX.currentMXE.esc();
+		else if (e.target.id == 'MathXE-Input' && (e.keyCode == 8 || e.which == 8) && MathX.isActive)
+			// bug fix for backspace not working when it is a new equation.
+			MathX.currentMXE.input.value = MathX.currentMXE.input.value.substr(0, MathX.currentMXE.input.value.length - 1);
+
 	});
-  
+
 	editor.on('keyup', function (e) {
 		//creates a keyboard shortcut for inserting expressions (alt + =);
 		if (e.keyCode == 61 && e.altKey)
 			MathX.insert();
-	})
+	});
 
 	// Add a button that opens a window
 	editor.addButton('MathX', {
 		text : 'f(x)',
 		icon : false,
-		onclick : function(e){
-      MathX.insert()
-    }  
+		onclick : function (e) {
+			MathX.insert();
+		}
 	});
 
 	// Adds a menu item to the tools menu
@@ -193,5 +195,4 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 			});
 		}
 	});
-
-})
+});
