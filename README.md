@@ -2,13 +2,16 @@
 An attempt to create a plugin for TinyMCE's latest version (v4.1) that will enable users to add equations and other mathematical expressions.
 This plugin will make use of MathJax.
 
+Current Issues:
+- Not working in Google Chrome.
+
 ## How to install
 
 ### Method 1: If you are using TinyMCE's CDN version.
 1. load MathX.js after tinyMCE is loaded.
 ```
   <script src="http://tinymce.cachefly.net/4.1/tinymce.min.js"></script>
-  <script src="MathX/MathX-plugin.js"></script>
+  <script src="MathX/plugin.min.js"></script>
 ```
 2. add "MathX" to 'plugins' configuration in tinymce.init({}).
 3. add "MathX" to toolbar.
@@ -46,5 +49,5 @@ This plugin will make use of MathJax.
 - A help window.
 
 #### To be develop
-- To have only one js file. (Merge MathX-plugin.js and MathX-editor.) (still in progress)
+- Fixed Chrome bug. (Not working in Google Chrome.)
 - A button that will add a graph.

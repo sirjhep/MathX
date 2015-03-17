@@ -1,4 +1,4 @@
-/* MathX.js
+/* MathX
  * A plugin for tinyMCE 4.X
  * by: Jephthah M. Orobia
  * (c) 2015
@@ -12,10 +12,8 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 	//Create MathX object that is not visible in global.
 	var MathX = {
 		isActive : false,
-		jaxSrc : 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=',
-		jaxConfig : 'AM_HTMLorMML-full',
 		init : function (jaxFrame) {
-			// initializes MathX and activate it.
+		// initializes MathX and activate it.
 			this.isActive = true;
 			var W = editor.getWin();
 			var jax = (jaxFrame.id) ? W.MathJax.Hub.getJaxFor(jaxFrame.id) : false; // a false jax would indicate that it is a new jax.
