@@ -11,15 +11,14 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 
 	//Create MathX object that is not visible in global.
 	var MathX = {
-		isActive : false,
-		init : function (jaxFrame) {
-		// initializes MathX and activate it.
+		init : function (jaxFrame, TS) {
+			// initializes MathX and activate it. TS is timestamp
 			this.isActive = true;
+      this.startedAt = TS;
 			var W = editor.getWin();
 			var jax = (jaxFrame.id) ? W.MathJax.Hub.getJaxFor(jaxFrame.id) : false; // a false jax would indicate that it is a new jax.
 			this.currentMXE = new this.editor(jaxFrame, jax); // creates a new object (Math X Editor object) and store it in currentMXE.
 		},
-
 		// insert a new equation
 		insert : function () {
 			var content = editor.selection.getContent();
@@ -43,8 +42,8 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 				this.row2 = this.table.insertRow(1);
 				this.cell21 = this.row2.insertCell(0);
 				this.input = doc.createElement('input');
-
-				// configure each node
+				
+        // configure each node
 				this.table.id = "MXE";
 				this.cell21.title = "Preview";
 				if (this.isNew) {
@@ -59,7 +58,10 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 					cMXE.showPreview();
 				};
 				this.input.onblur = function (e) {
-					cMXE.close();
+          if(e.timeStamp - MathX.startedAt < 1000)
+            cMXE.input.focus();
+          else
+            cMXE.close();
 				};
 
 				// add table#MXE before frame after hiding that frame.
@@ -97,7 +99,6 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 				}
 				MathX.isActive = false;
 				MathX.currentMXE = false;
-				editor.selection.moveToBookmark(MathX.endBM);
 			};
 
 			this.esc = function () {
@@ -105,7 +106,6 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 				$(this.frame).show();
 				MathX.isActive = false;
 				MathX.currentMXE = false;
-				editor.selection.moveToBookmark(MathX.endBM);
 			};
 
 			this.init();
@@ -125,25 +125,26 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 	editor.on('init', function (ed) {
 		var script = this.getDoc().createElement("script");
 		script.type = "text/javascript";
-		script.src = 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full';
+		//script.src = 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full';
+		script.src = '../MathJax Extension Development/MathJax/MathJax.js?config=AM_HTMLorMML-full';
 		this.getDoc().getElementsByTagName("head")[0].appendChild(script);
-		script.onload = function () {
-			editor.getWin().MathJax.Hub.Queue(function () {
-				editor.getWin().MathJax.Hub.Config({
-					showProcessingMessages : false
-				});
-			});
-		};
 		editor.dom.loadCSS(MathX.path + '/style.css');
 	});
 
-	// on NodeChange, tinymce bug: it fires twice. So MathX.isActive is the solution.
+	// on NodeChange, tinymce bug: it fires twice/thrice. So MathX.isActive is the solution.
 	editor.on('NodeChange', function (e) {
-		var P = e.parents;
-		for (var i in P)
-			if (P[i].classList.contains('MathJax') && !MathX.isActive) {
-				MXE = MathX.init(P[i]);
-			}
+    if(MathX.isActive) return;
+		if (e.element.tagName === 'SCRIPT' && e.element.type === 'math/asciimath') {
+			MathX.init(e.element.previousElementSibling, Date.now());
+			return;
+		} else {
+			var P = e.parents;
+			for (var i in P)
+				if (P[i].classList.contains('MathJax')) {
+					MathX.init(P[i], Date.now());
+					return;
+				}
+		}
 	});
 
 	editor.on('keydown', function (e) {

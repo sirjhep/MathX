@@ -2,8 +2,10 @@
 An attempt to create a plugin for TinyMCE's latest version (v4.1) that will enable users to add equations and other mathematical expressions.
 This plugin will make use of MathJax.
 
-Current Issues:
-- Not working in Google Chrome.
+## Current Issues:
+- _NOT working_ in _Google Chrome_.
+  * _Reason is discovered_: again, this is because of the bug in TinyMCE with Chrome, same (bugged)[http://www.tinymce.com/develop/bugtracker_view.php?id=7434] that bug me last week:
+  
 
 ## How to install
 
