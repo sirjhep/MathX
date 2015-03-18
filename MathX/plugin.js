@@ -125,8 +125,8 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 	editor.on('init', function (ed) {
 		var script = this.getDoc().createElement("script");
 		script.type = "text/javascript";
-		//script.src = 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full';
-		script.src = '../MathJax Extension Development/MathJax/MathJax.js?config=AM_HTMLorMML-full';
+		script.src = 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full';
+		//script.src = '../MathJax Extension Development/MathJax/MathJax.js?config=AM_HTMLorMML-full';
 		this.getDoc().getElementsByTagName("head")[0].appendChild(script);
 		editor.dom.loadCSS(MathX.path + '/style.css');
 	});
