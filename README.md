@@ -3,8 +3,8 @@ An attempt to create a plugin for TinyMCE's latest version (v4.1) that will enab
 This plugin will make use of MathJax.
 
 ## Current Issues:
-- _NOT working_ in _Google Chrome_.
-  * _Reason is discovered_: again, this is because of the bug in TinyMCE with Chrome, same (bugged)[http://www.tinymce.com/develop/bugtracker_view.php?id=7434] that bug me last week:
+- [ *RESOLVED* ] _NOT working_ in _Google Chrome_. 
+  * I restructured mechanims to no longer use an <input> element, instead, just make use of tinymce's built-ins.
   
 
 ## How to install
@@ -51,5 +51,4 @@ This plugin will make use of MathJax.
 - A help window.
 
 #### To be develop
-- Fixed Chrome bug. (Not working in Google Chrome.)
-- A button that will add a graph.
+- convert all jax to ascii text wrap in ticks(`) of the editor's content before submitting the form.
