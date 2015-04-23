@@ -9,106 +9,105 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 
 	var $ = editor.$; // make a jQuery like namespace
 
-	//Create MathX object that is not visible in global.
-	var MathX = {
-		init : function (jaxFrame, TS) {
-			// initializes MathX and activate it. TS is timestamp
-			this.isActive = true;
-      this.startedAt = TS;
-			var W = editor.getWin();
-			var jax = (jaxFrame.id) ? W.MathJax.Hub.getJaxFor(jaxFrame.id) : false; // a false jax would indicate that it is a new jax.
-			this.currentMXE = new this.editor(jaxFrame, jax); // creates a new object (Math X Editor object) and store it in currentMXE.
-		},
+	// an object that will not return anything, MathX object, treated as global, but cannot be access outside
+	var MX = {
+		//when this is true, it means that MX is on edit mode.
+		isActive : false,
+
 		// insert a new equation
 		insert : function () {
+			if (MX.isActive)
+				return;
 			var content = editor.selection.getContent();
 			editor.insertContent('<span class="MathJax">');
-			MathX.currentMXE.input.value = content;
+			var bm = editor.selection.getBookmark();
+			editor.insertContent(content + '</span> ');
+			editor.selection.moveToBookmark(bm);
 		},
-		// should be called as a new instance.
-		editor : function (jaxFrame, jax) {
-			this.isNew = (jax) ? false : true;
-			this.jax = (this.isNew) ? false : jax;
-			this.frame = jaxFrame;
-			var cMXE = this;
+
+		//finish edit mode
+		close : function () {
 			var W = editor.getWin();
-			var doc = editor.getDoc();
-
-			this.init = function () { // initializes
-				// create needed nodes
-				this.table = doc.createElement('table');
-				this.row1 = this.table.insertRow(0);
-				this.cell11 = this.row1.insertCell(0);
-				this.row2 = this.table.insertRow(1);
-				this.cell21 = this.row2.insertCell(0);
-				this.input = doc.createElement('input');
-				
-        // configure each node
-				this.table.id = "MXE";
-				this.cell21.title = "Preview";
-				if (this.isNew) {
-					this.input.placeholder = "Insert expression here...";
-					this.input.value = "";
-				} else
-					this.input.value = this.jax.originalText;
-				this.input.id = "MathXE-Input";
-				this.input.type = 'text';
-				this.cell21.id = 'MathXE-Preview';
-				this.input.oninput = function (e) {
-					cMXE.showPreview();
-				};
-				this.input.onblur = function (e) {
-          if(e.timeStamp - MathX.startedAt < 1000)
-            cMXE.input.focus();
-          else
-            cMXE.close();
-				};
-
-				// add table#MXE before frame after hiding that frame.
-				this.cell11.appendChild(this.input);
-				$(this.frame).hide().before(this.table);
-
-				this.showPreview();
-				this.input.focus();
-			};
-
-			this.showPreview = function () {
-				this.cell21.innerHTML = '`' + this.input.value + '`';
-				W.MathJax.Hub.Typeset('MathXE-Preview');
-			};
-
-			this.close = function () {
-				if (this.isNew) {
-					if (this.input.value === '') {
-						this.frame.remove();
-						this.table.remove();
-					} else {
-						var txtnode = W.document.createTextNode('`' + this.input.value + '`');
-						this.frame.parentNode.replaceChild(txtnode, this.table);
-						this.frame.remove();
-						W.MathJax.Hub.Queue(function () {
-							W.MathJax.Hub.Typeset();
-						});
-					}
+			if (!this.jax) { // if jax is new
+				if ($(this.MXin).text() === '') {
+					this.frame.remove();
+					this.table.remove();
+				} else {
+					var txtnode = W.document.createTextNode('`' + $(this.MXin).text() + '`');
+					this.frame.parentNode.replaceChild(txtnode, this.table);
+					this.frame.remove();
+					W.MathJax.Hub.Queue(function () {
+						W.MathJax.Hub.Typeset();
+					});
+				}
+			} else {
+				if ($(this.MXin).text() === '') {
+					this.table.remove();
+					this.frame.previousSibling.remove();
+					this.frame.remove();
+					this.frame.nextSibling.remove();
 				} else {
 					W.MathJax.Hub.Queue(function () {
-						cMXE.jax.Text(cMXE.input.value);
+						MX.jax.Text($(this.MXin).text());
 					});
 					this.table.remove();
 					$(this.frame).show();
 				}
-				MathX.isActive = false;
-				MathX.currentMXE = false;
-			};
+			}
+			this.postHook();
+		},
 
-			this.esc = function () {
-				this.table.remove();
+		//shows a preview
+		showPreview : function () {
+			this.MXout.innerHTML = '`' + $(this.MXin).text() + '`';
+			editor.getWin().MathJax.Hub.Typeset('MXout');
+		},
+
+		esc : function () {
+			this.table.remove();
+			if (this.jax)
 				$(this.frame).show();
-				MathX.isActive = false;
-				MathX.currentMXE = false;
-			};
+			else
+				this.frame.remove();
+			this.postHook();
+		},
 
-			this.init();
+		//actions after closing or ending MX.
+		postHook : function () {
+			this.isActive = false;
+			var frame = this.frame;
+			if (this.jax)
+				editor.selection.setCursorLocation(frame.nextSibling.nextSibling, 1);
+		},
+
+		init : function (frame) {
+			var W = editor.getWin(),
+			D = editor.getDoc();
+			this.isActive = true;
+			this.frame = frame;
+			this.jax = (frame.id) ? W.MathJax.Hub.getJaxFor(frame.id) : false;
+			// a false jax would indicate that it is a new jax.
+
+			// create the element structure needed for the MX
+			this.table = D.createElement('table');
+			this.table.id = "MX";
+			this.MXout = D.createElement('div');
+			this.MXin = this.table.insertRow(0).insertCell(0);
+			this.table.insertRow(1).insertCell(0).appendChild(this.MXout);
+			this.MXout.parentNode.insertBefore(D.createElement('div').appendChild(D.createTextNode('Preview:')), this.MXout);
+			this.MXin.id = "MXin";
+			this.MXout.id = "MXout";
+
+			$(this.frame).hide().before(this.table);
+
+			// if this is not a new equation
+			if (this.jax) {
+				this.MXin.appendChild(D.createTextNode(this.jax.originalText));
+				editor.selection.setCursorLocation(this.MXin, 1);
+			} else
+				editor.selection.setCursorLocation(this.MXin);
+
+			this.showPreview();
 		}
 	};
 
@@ -117,7 +116,7 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 		var S = document.querySelectorAll('script[src]');
 		var F = S[S.length - 1].src;
 		var Fs = F.split('/');
-		MathX.path = Fs[Fs.length - 2];
+		MX.path = Fs[Fs.length - 2];
 	})();
 
 	//load MathJax script into editor's iframe
@@ -125,45 +124,57 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 	editor.on('init', function (ed) {
 		var script = this.getDoc().createElement("script");
 		script.type = "text/javascript";
-		script.src = 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full';
-		//script.src = '../MathJax Extension Development/MathJax/MathJax.js?config=AM_HTMLorMML-full';
+		//script.src = 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full';
+		script.src = '../MathJax/MathJax.js?config=AM_HTMLorMML-full';
 		this.getDoc().getElementsByTagName("head")[0].appendChild(script);
-		editor.dom.loadCSS(MathX.path + '/style.css');
+		editor.dom.loadCSS(MX.path + '/style.css');
 	});
 
-	// on NodeChange, tinymce bug: it fires twice/thrice. So MathX.isActive is the solution.
+	var descendantOf = function (P, name, callbackIfTrue) {
+		// util function for determining if an element is a descendant/child of a certain type of parent.
+		//(elemParentsArray, idOrClassOfParent)
+		var call = callbackIfTrue || function (abc) {};
+		for (var i in P)
+			if (P[i].classList.contains(name) || P[i].id == name) {
+				call(P[i]);
+				return true;
+			}
+		return false;
+	}
+
+	// on NodeChange, tinymce bug: it fires twice/thrice. So e.selectionChange is the solution.
+	// MX.isActive makes sure that there is only one editor running.
 	editor.on('NodeChange', function (e) {
-    if(MathX.isActive) return;
-		if (e.element.tagName === 'SCRIPT' && e.element.type === 'math/asciimath') {
-			MathX.init(e.element.previousElementSibling, Date.now());
-			return;
-		} else {
-			var P = e.parents;
-			for (var i in P)
-				if (P[i].classList.contains('MathJax')) {
-					MathX.init(P[i], Date.now());
-					return;
-				}
-		}
+		if (e.selectionChange)
+			if (!MX.isActive)
+				descendantOf(e.parents, "MathJax", function (parent) {
+					MX.init(parent);
+				});
+			else if (!MX.MXin == e.element || !descendantOf(e.parents, "MXin"))
+				//Checks if MX.MXin has been blurred
+				MX.close();
 	});
 
 	editor.on('keydown', function (e) {
-		//prevent rendered jax from going to next line.
-		if (e.target.id == 'MathXE-Input' && (e.keyCode == 13 || e.which == 13) && MathX.isActive) {
+		if (MX.isActive && (e.keyCode == 13 || e.which == 13))
 			e.preventDefault();
-			MathX.currentMXE.close();
-		} else if (e.target.id == 'MathXE-Input' && (e.keyCode == 27 || e.which == 27) && MathX.isActive)
-			MathX.currentMXE.esc();
-		else if (e.target.id == 'MathXE-Input' && (e.keyCode == 8 || e.which == 8) && MathX.isActive)
-			// bug fix for backspace not working when it is a new equation.
-			MathX.currentMXE.input.value = MathX.currentMXE.input.value.substr(0, MathX.currentMXE.input.value.length - 1);
-
 	});
 
 	editor.on('keyup', function (e) {
+		if (MX.isActive) {
+			if (e.keyCode == 13 || e.which == 13 || e.keyCode == 9 || e.which == 9) {
+				e.preventDefault();
+				MX.close();
+			} else if (e.keyCode == 27 || e.which == 27) {
+				e.preventDefault();
+				MX.esc();
+			} else if ((e.keyCode < 33 || e.keyCode > 40) && (e.keyCode < 16 || e.keyCode > 20))
+				MX.showPreview();
+		}
+
 		//creates a keyboard shortcut for inserting expressions (alt + =);
-		if (e.keyCode == 61 && e.altKey)
-			MathX.insert();
+		else if (e.keyCode == 61 && e.altKey)
+			MX.insert();
 	});
 
 	// Add a button that opens a window
@@ -171,8 +182,9 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 		text : 'f(x)',
 		icon : false,
 		onclick : function (e) {
-			MathX.insert();
-		}
+			MX.insert();
+		},
+		tooltop : 'Insert Equation'
 	});
 
 	// Adds a menu item to the tools menu
