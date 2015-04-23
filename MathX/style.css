@@ -1,13 +1,23 @@
-#MXE{
+#MX{
   display: inline-table;
   border-collapse: collapse;
+  text-align: left;
 }
 
-#MXE td{
-  border: 1px solid skyblue;
+#MX td{
+  height: 20px;
 }
 
-#MathXE-Input, #MathXE-Input:active, #MathXE-Input:hover{
-  border: 0px;
-  width: 97%;
+#MXin{
+  background-color: skyblue;
+}
+
+#MX tr:last-child td{
+  background-color: #ffffaa;
+}
+
+#MXout{
+  border: 1px solid red;
+  padding: 3px 10px;
+  text-align: center;
 }
