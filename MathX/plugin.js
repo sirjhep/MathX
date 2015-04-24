@@ -138,7 +138,6 @@ tinymce.PluginManager.add('MathX', function (editor, url) {
 		var script = this.getDoc().createElement("script");
 		script.type = "text/javascript";
 		script.src = 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full';
-		//script.src = '../MathJax/MathJax.js?config=AM_HTMLorMML-full';
 		script.onload = function () {
 			editor.getWin().MathJax.Hub.Config({
 				showProcessingMessages : false,

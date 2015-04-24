@@ -1,15 +1,12 @@
 # MathX
+MathX mean Mathematical Expressions.
 An attempt to create a plugin for TinyMCE's latest version (v4.1) that will enable users to add equations and other mathematical expressions.
 This plugin will make use of MathJax.
 
-## Current Issues:
-- [ *RESOLVED* ] _NOT working_ in _Google Chrome_. 
-  * I restructured mechanims to no longer use an <input> element, instead, just make use of tinymce's built-ins.
-  
 
 ## How to install
 
-### Method 1: If you are using TinyMCE's CDN version.
+#### Method 1: If you are using TinyMCE's CDN version.
 1. load MathX.js after tinyMCE is loaded.
 ```
   <script src="http://tinymce.cachefly.net/4.1/tinymce.min.js"></script>
@@ -27,7 +24,7 @@ This plugin will make use of MathJax.
   </script>
 ```
 
-### Method 2: If you are using your local copy of TinyMCE.
+#### Method 2: If you are using your local copy of TinyMCE.
 
 1. Download MathX, and copy it (as a folder) to tinymce's plugin directory.
 2. simply add "MathX" to 'plugins' and 'toolbar' in your tinymce configuration on init.
@@ -49,6 +46,8 @@ This plugin will make use of MathJax.
 - Make all Jax Editable,
 - Added a keyboard shortcut for inserting an equation. (alt + =).
 - A help window.
+- convert all jax to ascii text wrap in ticks(`) of the editor's content before submitting the form.
 
 #### To be develop
-- convert all jax to ascii text wrap in ticks(`) of the editor's content before submitting the form.
+- think of a better color scheme for the editor.
+- think of another way for the " a" scheme.
